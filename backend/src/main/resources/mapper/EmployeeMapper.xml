@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlcertification.demo.mapper.EmployeeMapper">
+
+    <sql id="employeeFilter">
+        <where>
+            <if test="departmentName != null and departmentName != ''">
+                AND v.departmentname = #{departmentName}
+            </if>
+            <if test="activeOnly == true">
+                AND v.isactive = TRUE
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectEmployees" resultType="Employee">
+        SELECT
+            v.employeeid AS employeeId,
+            v.employeename AS employeeName,
+            v.departmentname AS departmentName,
+            v.jobtitle AS jobTitle,
+            v.salary AS salary,
+            v.hiredate AS hireDate,
+            v.isactive AS isActive,
+            v.managername AS managerName
+        FROM v_employeeOrgChart v
+        <include refid="employeeFilter"/>
+        ORDER BY v.employeeid
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countEmployees" resultType="long">
+        SELECT COUNT(*)
+        FROM v_employeeOrgChart v
+        <include refid="employeeFilter"/>
+    </select>
+
+</mapper>

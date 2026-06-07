@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlcertification.demo.mapper.CustomerMapper">
+
+    <sql id="customerFilter">
+        <where>
+            <if test="prefecture != null and prefecture != ''">
+                AND c.prefecture = #{prefecture}
+            </if>
+            <if test="membershipTier != null and membershipTier != ''">
+                AND c.membershiptier = #{membershipTier}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    c.customername ILIKE '%' || #{keyword} || '%'
+                    OR c.email ILIKE '%' || #{keyword} || '%'
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectCustomers" resultType="Customer">
+        SELECT
+            c.customerid AS customerId,
+            c.customername AS customerName,
+            c.email AS email,
+            c.phone AS phone,
+            c.prefecture AS prefecture,
+            c.city AS city,
+            c.registeredat AS registeredAt,
+            c.membershiptier AS membershipTier,
+            c.createdat AS createdAt
+        FROM customers c
+        <include refid="customerFilter"/>
+        ORDER BY c.customerid
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countCustomers" resultType="long">
+        SELECT COUNT(*)
+        FROM customers c
+        <include refid="customerFilter"/>
+    </select>
+
+    <select id="selectCustomerById" resultType="CustomerDetail">
+        SELECT
+            c.customerid AS customerId,
+            c.customername AS customerName,
+            c.email AS email,
+            c.phone AS phone,
+            c.prefecture AS prefecture,
+            c.city AS city,
+            c.registeredat AS registeredAt,
+            c.membershiptier AS membershipTier,
+            c.createdat AS createdAt,
+            COALESCE(s.ordercount, 0) AS orderCount,
+            COALESCE(s.totalspent, 0) AS totalPurchaseAmount,
+            CASE
+                WHEN COALESCE(s.ordercount, 0) = 0 THEN 0
+                ELSE COALESCE(s.totalspent, 0) / s.ordercount
+            END AS averageOrderAmount
+        FROM customers c
+        LEFT JOIN v_customerOrderStats s ON s.customerid = c.customerid
+        WHERE c.customerid = #{customerId}
+    </select>
+
+</mapper>

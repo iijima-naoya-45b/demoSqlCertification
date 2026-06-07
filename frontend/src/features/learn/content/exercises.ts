@@ -1,0 +1,145 @@
+import type { Exercise } from './types'
+
+export const exercises: Exercise[] = [
+  {
+    exerciseId: '01',
+    title: '基本SELECT',
+    difficulty: 1,
+    level: 'beginner',
+    description: 'SELECT / WHERE / ORDER BY の基礎を学びます。',
+    questions: [
+      { questionId: 'Q1', text: '全商品の productId, productName, unitPrice を unitPrice の降順で取得してください。' },
+      { questionId: 'Q2', text: '在庫数(stockQuantity)が100未満の商品名と在庫数を取得してください。' },
+      { questionId: 'Q3', text: '東京都に住む顧客の customerName, email, city を取得してください。' },
+      { questionId: 'Q4', text: '年収(salary)が50万円以上の従業員の名前、役職、給与を給与降順で取得してください。' },
+      { questionId: 'Q5', text: '廃番(isDiscontinued = TRUE)の商品をすべて取得してください。' },
+    ],
+  },
+  {
+    exerciseId: '02',
+    title: 'JOIN',
+    difficulty: 2,
+    level: 'intermediate',
+    description: 'INNER / LEFT JOIN と自己結合を練習します。',
+    questions: [
+      { questionId: 'Q1', text: '各従業員の名前、部署名、役職を取得してください（INNER JOIN）。' },
+      { questionId: 'Q2', text: '各注文の注文ID、顧客名、注文日、ステータスを取得してください。' },
+      { questionId: 'Q3', text: '各注文明細について、注文ID、商品名、数量、単価、割引率を取得してください。' },
+      { questionId: 'Q4', text: 'マネージャーがいる従業員について、従業員名とマネージャー名を取得してください（自己結合）。' },
+      { questionId: 'Q5', text: '注文が1件もない顧客の customerName と email を取得してください（LEFT JOIN + 条件）。' },
+      { questionId: 'Q6', text: 'カテゴリ名とそのカテゴリに属する商品数を取得してください。' },
+    ],
+  },
+  {
+    exerciseId: '03',
+    title: '集計・GROUP BY',
+    difficulty: 2,
+    level: 'intermediate',
+    description: '集計関数、GROUP BY、HAVING を使います。',
+    questions: [
+      { questionId: 'Q1', text: '部署ごとの従業員数と平均給与を取得してください。' },
+      { questionId: 'Q2', text: '会員ランク(membershipTier)ごとの顧客数を取得してください。' },
+      { questionId: 'Q3', text: '商品ごとのレビュー平均評価とレビュー件数を取得してください（レビューがない商品も含む）。' },
+      { questionId: 'Q4', text: '注文合計金額が10万円以上の注文IDと合計金額を取得してください。' },
+      { questionId: 'Q5', text: '2024年に注文した顧客ごとの注文回数と合計購入金額を取得してください（注文回数降順）。' },
+      { questionId: 'Q6', text: '平均評価が4.0以上の商品名と平均評価を取得してください（HAVING使用）。' },
+    ],
+  },
+  {
+    exerciseId: '04',
+    title: 'サブクエリ',
+    difficulty: 2,
+    level: 'intermediate',
+    description: 'スカラ・相関・EXISTS などのサブクエリを練習します。',
+    questions: [
+      { questionId: 'Q1', text: '全従業員の平均給与より給与が高い従業員の名前と給与を取得してください。' },
+      { questionId: 'Q2', text: '最も注文金額が高い注文の orderId と合計金額を取得してください。' },
+      { questionId: 'Q3', text: 'レビューが1件もない商品の productName を取得してください（NOT EXISTS または NOT IN）。' },
+      { questionId: 'Q4', text: '各部署で最も給与が高い従業員の名前、部署名、給与を取得してください。' },
+      { questionId: 'Q5', text: 'プラチナ会員の顧客が購入した商品名の一覧（重複なし）を取得してください。' },
+    ],
+  },
+  {
+    exerciseId: '05',
+    title: 'ウィンドウ関数',
+    difficulty: 3,
+    level: 'advanced',
+    description: 'RANK / ROW_NUMBER / 累計などのウィンドウ関数を学びます。',
+    questions: [
+      { questionId: 'Q1', text: '各従業員の名前、給与、部署内での給与ランク（RANK）を取得してください。' },
+      { questionId: 'Q2', text: '各商品の productName, unitPrice と、カテゴリ内での価格順位（ROW_NUMBER）を取得してください。' },
+      { questionId: 'Q3', text: '月別（YYYY-MM形式）の注文数と、累計注文数（RUNNING TOTAL）を取得してください。' },
+      { questionId: 'Q4', text: '各顧客の注文ごとに、注文金額とその顧客の過去注文金額の累計を取得してください。' },
+      { questionId: 'Q5', text: '給与が部署平均より高い従業員について、名前、給与、部署平均給与、差額を取得してください。' },
+    ],
+  },
+  {
+    exerciseId: '06',
+    title: '応用（CTE・CASE）',
+    difficulty: 3,
+    level: 'advanced',
+    description: 'CTE、CASE式、日付関数を組み合わせます。',
+    questions: [
+      { questionId: 'Q1', text: 'CTEを使って、カテゴリごとの売上合計を上位3カテゴリまで取得してください。' },
+      { questionId: 'Q2', text: '従業員の勤続年数を計算し、区分（5年未満/5-10年/10年以上）とともに表示してください（CASE式）。' },
+      { questionId: 'Q3', text: '2024年の四半期（Q1〜Q4）ごとの注文数と売上合計を取得してください。' },
+      { questionId: 'Q4', text: '給与改定履歴から、各従業員の最新の給与改定情報を取得してください。' },
+      { questionId: 'Q5', text: '商品ごとに在庫状況を「在庫切れ/残りわずか/十分」で分類して表示してください。' },
+    ],
+  },
+  {
+    exerciseId: '07',
+    title: '実行計画（EXPLAIN）',
+    difficulty: 3,
+    level: 'advanced',
+    description: 'EXPLAIN / EXPLAIN ANALYZE でインデックス利用を確認します。',
+    questions: [
+      {
+        questionId: 'Q1',
+        text: 'EXPLAIN ANALYZE で customers の prefecture 検索計画を確認してください。',
+        hint: "EXPLAIN ANALYZE SELECT * FROM customers WHERE prefecture = '東京都';",
+      },
+      {
+        questionId: 'Q2',
+        text: '配達済み注文の日付範囲検索で部分インデックスが使われるか確認してください。',
+        hint: "SELECT orderId FROM orders WHERE status = 'delivered' AND orderDate >= '2024-01-01';",
+      },
+      { questionId: 'Q3', text: '在籍中従業員の部署・給与検索で部分インデックスの使用を確認してください。' },
+      { questionId: 'Q4', text: '顧客と注文の JOIN 集計で Hash Join / Nested Loop のどちらが選ばれるか確認してください。' },
+      { questionId: 'Q5', text: 'インデックス追加前後の計画比較は DBeaver / psql で実施してください（サンドボックスでは DDL 不可）。' },
+    ],
+  },
+  {
+    exerciseId: '08',
+    title: '関数・プロシージャ',
+    difficulty: 3,
+    level: 'advanced',
+    description: 'DB関数は SELECT で呼び出せます。CALL / UPDATE はサンドボックスではブロックされます。',
+    questions: [
+      { questionId: 'Q1', text: 'fn_calcOrderTotal を使って、注文ID=1 の合計金額を取得してください。', hint: 'SELECT fn_calcOrderTotal(1);' },
+      { questionId: 'Q2', text: 'fn_getCustomerTierDiscount を使って、顧客ID=1 の割引率を取得してください。' },
+      { questionId: 'Q3', text: 'fn_getEmployeeTenureMonths を使って、従業員ID=1 の勤続月数を取得してください。' },
+      { questionId: 'Q4', text: 'sp_confirmOrder の動作確認は psql で CALL を実行してください（サンドボックスでは CALL 不可）。' },
+      { questionId: 'Q5', text: '有効なクーポンを coupons テーブルから SELECT で確認してください。' },
+      { questionId: 'Q6', text: 'auditLogs に記録があるか SELECT で確認してください。' },
+    ],
+  },
+]
+
+export function getExerciseById(exerciseId: string): Exercise | undefined {
+  return exercises.find((exercise) => exercise.exerciseId === exerciseId)
+}
+
+export function getExercisesByLevel(level: Exercise['level']): Exercise[] {
+  return exercises.filter((exercise) => exercise.level === level)
+}
+
+export function getExerciseSummaries() {
+  return exercises.map((exercise) => ({
+    exerciseId: exercise.exerciseId,
+    title: exercise.title,
+    difficulty: exercise.difficulty,
+    level: exercise.level,
+    questionCount: exercise.questions.length,
+  }))
+}

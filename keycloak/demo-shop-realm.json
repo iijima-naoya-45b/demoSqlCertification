@@ -1,0 +1,80 @@
+{
+  "realm": "demo-shop",
+  "enabled": true,
+  "displayName": "DemoShop SQL Practice",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "learner",
+        "description": "SQL演習ユーザー"
+      },
+      {
+        "name": "admin",
+        "description": "管理者"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "demoshop-api",
+      "name": "DemoShop API",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "demoshop-secret",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:8080/*",
+        "http://localhost:8080/login/oauth2/code/keycloak"
+      ],
+      "webOrigins": [
+        "http://localhost:5173",
+        "http://localhost:8080"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:5173/login"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "demo",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Learner",
+      "email": "demo@demoshop.local",
+      "realmRoles": ["learner"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "demopass",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@demoshop.local",
+      "realmRoles": ["admin", "learner"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "adminpass",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

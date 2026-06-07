@@ -1,0 +1,12 @@
+.env
+postgresData/
+a5m2/generated/
+*.log
+
+# Java / Gradle
+backend/build/
+backend/.gradle/
+
+# Node.js
+frontend/node_modules/
+frontend/dist/

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlcertification.demo.mapper.OrderMapper">
+
+    <sql id="orderFilter">
+        <where>
+            <if test="status != null and status != ''">
+                AND v.status = #{status}
+            </if>
+            <if test="customerId != null">
+                AND o.customerid = #{customerId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectOrders" resultType="OrderSummary">
+        SELECT
+            v.orderid AS orderId,
+            v.customername AS customerName,
+            v.salesrepname AS salesRepName,
+            v.orderdate AS orderDate,
+            v.status AS status,
+            v.itemcount AS itemCount,
+            v.subtotal AS subtotal,
+            v.shippingfee AS shippingFee,
+            v.totalamount AS totalAmount
+        FROM v_orderSummary v
+        <if test="customerId != null">
+            JOIN orders o ON o.orderid = v.orderid
+        </if>
+        <include refid="orderFilter"/>
+        ORDER BY v.orderdate DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countOrders" resultType="long">
+        SELECT COUNT(*)
+        FROM v_orderSummary v
+        <if test="customerId != null">
+            JOIN orders o ON o.orderid = v.orderid
+        </if>
+        <include refid="orderFilter"/>
+    </select>
+
+    <select id="selectOrderById" resultType="OrderSummary">
+        SELECT
+            orderid AS orderId,
+            customername AS customerName,
+            salesrepname AS salesRepName,
+            orderdate AS orderDate,
+            status AS status,
+            itemcount AS itemCount,
+            subtotal AS subtotal,
+            shippingfee AS shippingFee,
+            totalamount AS totalAmount
+        FROM v_orderSummary
+        WHERE orderid = #{orderId}
+    </select>
+
+</mapper>

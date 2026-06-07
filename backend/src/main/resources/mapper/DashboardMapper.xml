@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqlcertification.demo.mapper.DashboardMapper">
+
+    <select id="selectStats" resultType="DashboardStats">
+        SELECT
+            (SELECT COUNT(*) FROM customers) AS customerCount,
+            (SELECT COUNT(*) FROM orders) AS orderCount,
+            (SELECT COUNT(*) FROM products) AS productCount,
+            (SELECT COUNT(*) FROM employees) AS employeeCount,
+            (SELECT COUNT(*) FROM orders WHERE status = 'delivered') AS deliveredOrderCount,
+            (
+                SELECT COALESCE(SUM(totalamount), 0)
+                FROM v_orderSummary
+                WHERE status IN ('confirmed', 'shipped', 'delivered')
+            ) AS totalRevenue
+    </select>
+
+    <select id="selectMembershipTierStats" resultType="MembershipTierStat">
+        SELECT
+            membershiptier AS membershipTier,
+            COUNT(*) AS customerCount
+        FROM customers
+        GROUP BY membershiptier
+        ORDER BY customerCount DESC
+    </select>
+
+</mapper>

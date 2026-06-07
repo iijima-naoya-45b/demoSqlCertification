@@ -1,0 +1,1 @@
+sql_certification (local)=__ConnectionType=Internal;ProviderName=PostgreSQL;SavePassword=False;UseUnicodeMetaData=True;ServerName=localhost;Port=5432;Database=sql_certification;UserName=sqluser;Password=;DBType=PostgreSQL;ProtocolVersion=30;InitialSchemaName=public
