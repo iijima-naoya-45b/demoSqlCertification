@@ -91,6 +91,23 @@ DB_MODE=local ./scripts/seed.sh reset
 
 デモユーザー: `demo` / `demopass`（learner）、`admin` / `adminpass`（admin）
 
+#### Google ログイン（任意）
+
+**Keycloak は Google を外部 IdP（OAuth 2.0）として連携できます。** Spring Boot から直接 Google に繋ぐのではなく、Keycloak が Google 認証を仲介する構成です。
+
+1. [Google Cloud Console](https://console.cloud.google.com/) で OAuth 2.0 クライアント ID を作成
+2. **承認済みリダイレクト URI** に以下を登録:
+   - `http://localhost:8180/realms/demo-shop/broker/google/endpoint`
+3. `.env` に設定（`.env.example` 参照）:
+   ```bash
+   GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your-client-secret
+   APP_AUTH_GOOGLE_LOGIN_ENABLED=true
+   ```
+4. `docker compose up -d --build` で再起動（`keycloak-config` が IdP を有効化）
+
+ログイン画面に「Google でログイン」ボタンが表示されます。初回ログイン時は `learner` ロールが付与されます。
+
 ### Docker で一括起動（推奨）
 
 ```bash

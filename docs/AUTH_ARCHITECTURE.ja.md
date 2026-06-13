@@ -212,6 +212,35 @@ classDiagram
 
 Keycloak 管理コンソール: http://localhost:8180 （admin / admin）
 
+## Google ログイン（Keycloak 外部 IdP）
+
+Keycloak は **Google OAuth 2.0** を Identity Provider として取り込めます。アプリ側の OAuth クライアントは Keycloak のまま（`demoshop-api`）で、Google 連携は Keycloak 管理画面または `scripts/configureKeycloakGoogleIdp.sh` で設定します。
+
+```mermaid
+sequenceDiagram
+    actor User as ユーザー
+    participant FE as React
+    participant API as Spring Boot
+    participant KC as Keycloak
+    participant Google as Google OAuth
+
+    User->>FE: 「Googleでログイン」
+    FE->>API: GET /oauth2/authorization/keycloak?idp=google
+    API->>KC: 認可リクエスト (kc_idp_hint=google)
+    KC->>Google: OAuth 認可
+    Google->>User: Google ログイン画面
+    User->>Google: 認証
+    Google->>KC: コールバック
+    KC->>API: authorization code → token
+    API-->>FE: Set-Cookie + redirect
+```
+
+| 設定 | 説明 |
+|------|------|
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud の OAuth クライアント |
+| `APP_AUTH_GOOGLE_LOGIN_ENABLED` | FE の Google ボタン表示 |
+| Google リダイレクト URI | `http://localhost:8180/realms/demo-shop/broker/google/endpoint` |
+
 ## ローカル開発（Keycloak なし）
 
 テスト実行時は `app.security.enabled=false` で認証をスキップします。

@@ -50,6 +50,8 @@ class AuthControllerTest {
         mockMvc.perform(get("/api/auth/config"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.loginUrl").value("/oauth2/authorization/keycloak"))
-                .andExpect(jsonPath("$.logoutUrl").value("/api/auth/logout"));
+                .andExpect(jsonPath("$.logoutUrl").value("/api/auth/logout"))
+                .andExpect(jsonPath("$.googleLoginEnabled").value(false))
+                .andExpect(jsonPath("$.googleLoginUrl").value("/oauth2/authorization/keycloak?idp=google"));
     }
 }

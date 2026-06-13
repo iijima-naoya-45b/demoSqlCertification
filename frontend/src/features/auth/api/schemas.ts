@@ -12,6 +12,8 @@ export const authUserSchema = z.object({
 export const authConfigSchema = z.object({
   loginUrl: z.string(),
   logoutUrl: z.string(),
+  googleLoginEnabled: z.boolean().default(false),
+  googleLoginUrl: z.string().optional(),
 })
 
 export type AuthUser = z.infer<typeof authUserSchema>

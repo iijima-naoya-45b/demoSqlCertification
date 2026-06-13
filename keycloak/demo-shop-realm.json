@@ -76,5 +76,40 @@
         }
       ]
     }
+  ],
+  "identityProviders": [
+    {
+      "alias": "google",
+      "displayName": "Google",
+      "providerId": "google",
+      "enabled": false,
+      "updateProfileFirstLoginMode": "on",
+      "trustEmail": true,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "authenticateByDefault": false,
+      "linkOnly": false,
+      "firstBrokerLoginFlowAlias": "first broker login",
+      "config": {
+        "clientId": "REPLACE_WITH_GOOGLE_CLIENT_ID",
+        "clientSecret": "REPLACE_WITH_GOOGLE_CLIENT_SECRET",
+        "defaultScope": "openid profile email",
+        "hostedDomain": "",
+        "useJwksUrl": "true",
+        "syncMode": "IMPORT",
+        "guiOrder": "1"
+      }
+    }
+  ],
+  "identityProviderMappers": [
+    {
+      "name": "google-default-learner-role",
+      "identityProviderAlias": "google",
+      "identityProviderMapper": "oidc-hardcoded-role-idp-mapper",
+      "config": {
+        "role": "learner",
+        "syncMode": "INHERIT"
+      }
+    }
   ]
 }

@@ -5,7 +5,7 @@ import { Card } from '../../../components/ui/card'
 import { useAuth } from './auth-provider'
 
 export function LoginPage() {
-  const { isAuthenticated, isLoading, login } = useAuth()
+  const { isAuthenticated, isLoading, login, loginWithGoogle, googleLoginEnabled } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const redirectPath = (location.state as { from?: string } | null)?.from ?? '/'
@@ -24,7 +24,8 @@ export function LoginPage() {
         </p>
         <h1 className="mt-2 text-2xl font-bold text-slate-900">ログイン</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Keycloak で認証します。セッションは HttpOnly Cookie（SameSite=Lax）で管理されます。
+          Keycloak（OIDC）で認証します。セッションは HttpOnly Cookie（SameSite=Lax）で管理されます。
+          {googleLoginEnabled && ' Google アカウントでもログインできます。'}
         </p>
 
         <div className="mt-6 space-y-3 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
@@ -36,9 +37,22 @@ export function LoginPage() {
           </p>
         </div>
 
-        <Button className="mt-6 w-full" onClick={login}>
-          Keycloak でログイン
-        </Button>
+        <div className="mt-6 space-y-3">
+          {googleLoginEnabled && (
+            <Button className="w-full" variant="secondary" onClick={loginWithGoogle}>
+              Google でログイン
+            </Button>
+          )}
+          <Button className="w-full" onClick={login}>
+            Keycloak でログイン
+          </Button>
+        </div>
+
+        {googleLoginEnabled && (
+          <p className="mt-4 text-xs text-slate-500">
+            「Keycloak でログイン」からも Google ボタンで同じアカウント連携が利用できます。
+          </p>
+        )}
       </Card>
     </div>
   )

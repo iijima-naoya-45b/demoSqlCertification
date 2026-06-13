@@ -36,6 +36,30 @@ services:
       - "8180:8080"
     volumes:
       - ./keycloak/demo-shop-realm.json:/opt/keycloak/data/import/demo-shop-realm.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  keycloak-config:
+    image: curlimages/curl:8.12.1
+    container_name: demo-sql-certification-keycloak-config
+    restart: "no"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_REALM: demo-shop
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    volumes:
+      - ./scripts/configureKeycloakGoogleIdp.sh:/configure.sh:ro
+    entrypoint: ["/bin/sh", "/configure.sh"]
 
   backend:
     build:
@@ -60,11 +84,14 @@ services:
       KEYCLOAK_CLIENT_ID: demoshop-api
       KEYCLOAK_CLIENT_SECRET: demoshop-secret
       APP_SECURITY_ENABLED: "true"
+      APP_AUTH_GOOGLE_LOGIN_ENABLED: ${APP_AUTH_GOOGLE_LOGIN_ENABLED:-false}
     depends_on:
       postgres:
         condition: service_healthy
       keycloak:
-        condition: service_started
+        condition: service_healthy
+      keycloak-config:
+        condition: service_completed_successfully
 
   frontend:
     build:

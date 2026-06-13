@@ -25,6 +25,16 @@ docker compose up -d --build
 
 waitForDb
 
+if [[ -n "${GOOGLE_CLIENT_ID:-}" && -n "${GOOGLE_CLIENT_SECRET:-}" ]]; then
+  echo ""
+  echo "Google ログイン: Keycloak IdP を設定しています..."
+  KEYCLOAK_URL="${KEYCLOAK_URL:-http://localhost:8180}" \
+    GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID}" \
+    GOOGLE_CLIENT_SECRET="${GOOGLE_CLIENT_SECRET}" \
+    "${scriptDir}/configureKeycloakGoogleIdp.sh"
+  echo "  APP_AUTH_GOOGLE_LOGIN_ENABLED=true を .env に設定すると UI に Google ボタンが表示されます。"
+fi
+
 echo ""
 echo "初回起動時は docker-entrypoint-initdb.d により SQL が自動投入されます。"
 echo "再投入が必要な場合: ./scripts/seed.sh reset"

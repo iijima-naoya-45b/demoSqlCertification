@@ -8,7 +8,9 @@ type AuthContextValue = {
   user: AuthUser | undefined
   isLoading: boolean
   isAuthenticated: boolean
+  googleLoginEnabled: boolean
   login: () => void
+  loginWithGoogle: () => void
   logout: () => void
   refreshUser: () => Promise<void>
 }
@@ -38,13 +40,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     retry: false,
   })
 
+  const buildAuthRedirectUrl = useCallback((path: string) => {
+    return path.startsWith('http') ? path : `${env.apiBaseUrl}${path}`
+  }, [])
+
   const login = useCallback(() => {
     const loginPath = authConfig?.loginUrl ?? '/oauth2/authorization/keycloak'
-    const loginUrl = loginPath.startsWith('http')
-      ? loginPath
-      : `${env.apiBaseUrl}${loginPath}`
-    window.location.href = loginUrl
-  }, [authConfig])
+    window.location.href = buildAuthRedirectUrl(loginPath)
+  }, [authConfig, buildAuthRedirectUrl])
+
+  const loginWithGoogle = useCallback(() => {
+    const googleLoginPath =
+      authConfig?.googleLoginUrl ?? '/oauth2/authorization/keycloak?idp=google'
+    window.location.href = buildAuthRedirectUrl(googleLoginPath)
+  }, [authConfig, buildAuthRedirectUrl])
 
   const logout = useCallback(() => {
     const logoutPath = authConfig?.logoutUrl ?? '/api/auth/logout'
@@ -64,11 +73,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user,
       isLoading,
       isAuthenticated: user?.authenticated === true,
+      googleLoginEnabled: authConfig?.googleLoginEnabled === true,
       login,
+      loginWithGoogle,
       logout,
       refreshUser,
     }),
-    [user, isLoading, login, logout, refreshUser],
+    [user, isLoading, authConfig, login, loginWithGoogle, logout, refreshUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

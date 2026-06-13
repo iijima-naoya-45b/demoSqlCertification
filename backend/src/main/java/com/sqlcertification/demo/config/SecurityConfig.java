@@ -1,6 +1,7 @@
 package com.sqlcertification.demo.config;
 
 import com.sqlcertification.demo.security.KeycloakGrantedAuthoritiesMapper;
+import com.sqlcertification.demo.security.KeycloakOAuth2AuthorizationRequestResolver;
 import com.sqlcertification.demo.security.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,17 +29,20 @@ public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler loginSuccessHandler;
     private final KeycloakGrantedAuthoritiesMapper keycloakGrantedAuthoritiesMapper;
+    private final KeycloakOAuth2AuthorizationRequestResolver authorizationRequestResolver;
     private final String allowedOrigins;
     private final String logoutSuccessUrl;
 
     public SecurityConfig(
             OAuth2LoginSuccessHandler loginSuccessHandler,
             KeycloakGrantedAuthoritiesMapper keycloakGrantedAuthoritiesMapper,
+            KeycloakOAuth2AuthorizationRequestResolver authorizationRequestResolver,
             @Value("${app.cors.allowed-origins}") String allowedOrigins,
             @Value("${app.auth.logout-success-url:http://localhost:5173/login}") String logoutSuccessUrl
     ) {
         this.loginSuccessHandler = loginSuccessHandler;
         this.keycloakGrantedAuthoritiesMapper = keycloakGrantedAuthoritiesMapper;
+        this.authorizationRequestResolver = authorizationRequestResolver;
         this.allowedOrigins = allowedOrigins;
         this.logoutSuccessUrl = logoutSuccessUrl;
     }
@@ -68,6 +72,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(authorization -> authorization
+                                .authorizationRequestResolver(authorizationRequestResolver)
+                        )
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(keycloakGrantedAuthoritiesMapper.oidcUserService())
                         )

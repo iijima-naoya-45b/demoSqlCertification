@@ -91,6 +91,23 @@ Architecture diagrams: [docs/AUTH_ARCHITECTURE.en.md](docs/AUTH_ARCHITECTURE.en.
 
 Demo users: `demo` / `demopass` (learner), `admin` / `adminpass` (admin)
 
+#### Google sign-in (optional)
+
+**Keycloak can federate Google as an external OAuth 2.0 IdP.** The app still uses Keycloak as its OIDC client; Google is configured inside Keycloak, not as a second Spring registration.
+
+1. Create an OAuth 2.0 client in [Google Cloud Console](https://console.cloud.google.com/)
+2. Add authorized redirect URI:
+   - `http://localhost:8180/realms/demo-shop/broker/google/endpoint`
+3. Set in `.env` (see `.env.example`):
+   ```bash
+   GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your-client-secret
+   APP_AUTH_GOOGLE_LOGIN_ENABLED=true
+   ```
+4. Restart with `docker compose up -d --build` (`keycloak-config` enables the IdP)
+
+The login page shows a **Sign in with Google** button. First-time users receive the `learner` role.
+
 ### Run with Docker (recommended)
 
 ```bash
